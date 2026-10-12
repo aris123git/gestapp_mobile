@@ -1,0 +1,29 @@
+workflows:
+  android-debug:
+    name: Compiler APK Debug Android
+
+    max_build_duration: 60
+
+    environment:
+      java: 17
+
+    scripts:
+      - name: Vérifier le projet
+        script: |
+          ls -la
+
+      - name: Donner les permissions Gradle
+        script: |
+          chmod +x ./gradlew
+
+      - name: Compiler APK Debug
+        script: |
+          ./gradlew assembleDebug
+
+    artifacts:
+      - app/build/outputs/apk/debug/*.apk
+
+    publishing:
+      email:
+        recipients:
+          - YOUR_EMAIL@example.com

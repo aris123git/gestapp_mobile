@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NexaGes</string>
+    <string name="kiosk_device_admin_label">NexaGes Kiosque</string>
+    <string name="kiosk_device_admin_description">Autorise le mode kiosque / Lock Task pour verrouiller la tablette sur NexaGes.</string>
+</resources>

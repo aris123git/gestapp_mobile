@@ -1,0 +1,6 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Thème de base minimal : le vrai thème visuel est géré côté
+         Jetpack Compose (ui/theme/Theme.kt). Ce style XML sert uniquement
+         de point d'entrée pour l'Activity avant le premier setContent. -->
+    <style name="Theme.MaquisCaisse" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
