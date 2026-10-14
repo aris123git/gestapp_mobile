@@ -56,10 +56,10 @@ import com.maquis.caisse.core.Constants
 import com.maquis.caisse.ui.common.DropdownField
 import java.io.File
 
-@OptIn(ExperimentalMaterial3Api::class)
 private val StockUnitOptions = listOf("Carton", "Bidon", "Sac", "Caisse", "Bac")
 private val DetailUnitOptions = listOf("Kg", "Litre", "Pièce", "Verre")
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductFormScreen(
     form: ProductFormState,
