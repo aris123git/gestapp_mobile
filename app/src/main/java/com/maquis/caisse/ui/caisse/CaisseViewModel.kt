@@ -404,7 +404,7 @@ class CaisseViewModel @Inject constructor(
                 savedStateHandle[KEY_CART] = CartJson.encode(emptyList())
                 val printEnabled = printer.isEnabled()
                 var printMessage: String? = null
-                if (printEnabled) {
+                if (printEnabled && state.printOnPayment) {
                     val result = printer.printOrder(order)
                     printMessage = if (result.isSuccess) {
                         "Ticket imprimé"

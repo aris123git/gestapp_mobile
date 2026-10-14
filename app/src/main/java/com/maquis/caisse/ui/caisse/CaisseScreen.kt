@@ -153,6 +153,9 @@ fun CaisseScreen(
                 onValidate = viewModel::openPayment,
                 onClear = viewModel::clearCart,
                 onSaveOrder = { viewModel.saveUnpaidOrder() },
+                printAvailable = state.printAvailable,
+                printOnPayment = state.printOnPayment,
+                onPrintOnPaymentChange = viewModel::setPrintOnPayment,
                 modifier = Modifier
                     .weight(0.72f)
                     .fillMaxHeight()

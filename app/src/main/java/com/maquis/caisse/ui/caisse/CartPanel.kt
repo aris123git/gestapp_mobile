@@ -17,6 +17,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -46,6 +47,10 @@ fun CartPanel(
     onClear: (() -> Unit)? = null,
     onSaveOrder: (() -> Unit)? = null,
     onReprint: (() -> Unit)? = null,
+    /** Imprimante activée dans Paramètres : sinon l'interrupteur d'impression est masqué. */
+    printAvailable: Boolean = false,
+    printOnPayment: Boolean = true,
+    onPrintOnPaymentChange: (Boolean) -> Unit = {},
 ) {
     Surface(
         shape = RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp),
@@ -167,6 +172,26 @@ fun CartPanel(
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
+            }
+
+            if (printAvailable) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        "Imprimer le ticket",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    Switch(
+                        checked = printOnPayment,
+                        onCheckedChange = onPrintOnPaymentChange,
+                    )
+                }
             }
 
             if (onSaveOrder != null) {
