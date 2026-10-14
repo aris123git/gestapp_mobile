@@ -118,6 +118,10 @@ data class CaisseUiState(
     val snackbarMessage: String? = null,
     /** Bénéfice du panier visible uniquement pour l'administrateur. */
     val showProfit: Boolean = false,
+    /** Imprimante activée dans Paramètres (sinon le choix d'impression est grisé). */
+    val printAvailable: Boolean = false,
+    /** Choix du vendeur dans la fenêtre de paiement : imprimer le ticket à l'encaissement. */
+    val printOnPayment: Boolean = true,
     /** Option Paramètres : vente libre (par montant) disponible. */
     val freeEntryEnabled: Boolean = true,
     /** Mode vente libre actif : toucher un produit = saisir un montant. */
@@ -172,6 +176,16 @@ class CaisseViewModel @Inject constructor(
         viewModelScope.launch {
             session.currentUser.collect { user ->
                 _uiState.update { it.copy(showProfit = user?.role == "ADMIN") }
+            }
+        }
+        viewModelScope.launch {
+            settingsRepository.observe(SettingsKeys.PRINT_ENABLED).collect { value ->
+                _uiState.update { it.copy(printAvailable = value == "true") }
+            }
+        }
+        viewModelScope.launch {
+            settingsRepository.observe(SettingsKeys.PRINT_ON_PAYMENT).collect { value ->
+                _uiState.update { it.copy(printOnPayment = value != "false") }
             }
         }
         viewModelScope.launch {
@@ -246,6 +260,14 @@ class CaisseViewModel @Inject constructor(
             setCart(CartOperations.remove(_uiState.value.cart, detail.product.id))
         }
         dismissDetailSale()
+    }
+
+    /** Active / coupe l'impression du ticket à l'encaissement (choix mémorisé). */
+    fun setPrintOnPayment(enabled: Boolean) {
+        _uiState.update { it.copy(printOnPayment = enabled) }
+        viewModelScope.launch {
+            settingsRepository.set(SettingsKeys.PRINT_ON_PAYMENT, enabled.toString())
+        }
     }
 
     /** Active / coupe le mode vente libre (vente par montant). */
@@ -565,6 +587,18 @@ class CaisseViewModel @Inject constructor(
                         quantityOverlay = null,
                         snackbarMessage = "Commande ${order.publicId} payée",
                     )
+                }
+                // Impression après coup : un échec d'imprimante n'annule jamais la vente.
+                if (state.printAvailable && state.printOnPayment) {
+                    val result = printer.printOrder(order)
+                    val note = if (result.isSuccess) {
+                        "ticket imprimé"
+                    } else {
+                        "impression impossible (${result.exceptionOrNull()?.message ?: "erreur"})"
+                    }
+                    _uiState.update {
+                        it.copy(snackbarMessage = "Commande ${order.publicId} payée · $note")
+                    }
                 }
             } catch (e: CancellationException) {
                 throw e

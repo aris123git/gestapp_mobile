@@ -6,6 +6,9 @@ object SettingsKeys {
     const val SHOP_PHONE = "shop_phone"
     const val TICKET_FOOTER = "ticket_footer"
     const val PRINT_ENABLED = "print_enabled"
+    // "true" (défaut) = imprimer le ticket à l'encaissement ; "false" = ne pas imprimer.
+    // Choix fait par le vendeur dans la fenêtre de paiement (n'a d'effet que si PRINT_ENABLED = "true").
+    const val PRINT_ON_PAYMENT = "print_on_payment"
     const val PRINT_WIDTH = "print_width" // 58 | 80
     const val PRINTER_ADDRESS = "printer_address"
     const val PRINTER_NAME = "printer_name"

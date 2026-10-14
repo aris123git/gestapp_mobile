@@ -228,6 +228,9 @@ fun CaisseScreen(
             onSelectField = viewModel::selectPaymentField,
             onInputChange = viewModel::onPaymentDigitInput,
             onConfirm = viewModel::confirmPayment,
+            printAvailable = state.printAvailable,
+            printOnPayment = state.printOnPayment,
+            onPrintOnPaymentChange = viewModel::setPrintOnPayment,
         )
     }
 

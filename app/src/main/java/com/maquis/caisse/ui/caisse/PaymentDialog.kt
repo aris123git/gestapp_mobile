@@ -14,9 +14,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -37,6 +39,9 @@ fun PaymentDialog(
     onSelectField: (PaymentField) -> Unit,
     onInputChange: (String) -> Unit,
     onConfirm: () -> Unit,
+    printAvailable: Boolean = false,
+    printOnPayment: Boolean = true,
+    onPrintOnPaymentChange: (Boolean) -> Unit = {},
 ) {
     val input = payment.toPaymentInput()
     val changePreview = PaymentCalculator.previewChange(total, input)
@@ -124,6 +129,30 @@ fun PaymentDialog(
                                 modifier = Modifier.padding(horizontal = 16.dp),
                             )
                         }
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Imprimer le ticket", style = MaterialTheme.typography.bodyLarge)
+                            if (!printAvailable) {
+                                Text(
+                                    "Impression désactivée (Paramètres)",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
+                        Switch(
+                            checked = printAvailable && printOnPayment,
+                            onCheckedChange = onPrintOnPaymentChange,
+                            enabled = printAvailable && !payment.isSaving,
+                        )
                     }
 
                     payment.errorMessage?.let { msg ->
